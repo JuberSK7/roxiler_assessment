@@ -1,21 +1,6 @@
 const axios = require("axios");
 const Transaction = require("../models/Transaction");
 
-// const initializeDatabase = async (req, res) => {
-//   try {
-//     const { data } = await axios.get('https://s3.amazonaws.com/roxiler.com/product_transaction.json');
-//     const cleanedData = data.map(item => ({
-//         ...item,
-//         price: parseFloat(item.price) || 0, // Convert price to a number (handle NaN gracefully)
-//         // Add other transformations or validations as needed
-//       }));
-//     await Transaction.deleteMany({});
-//     await Transaction.insertMany(cleanedData);
-//     res.status(200).send({ message: 'Database initialized successfully' });
-//   } catch (error) {
-//     res.status(500).send({ message: 'Failed to initialize database', error });
-//   }
-// };
 
 const initializeDatabase = async (req, res) => {
   try {
@@ -25,15 +10,15 @@ const initializeDatabase = async (req, res) => {
     );
     console.log("Fetched data successfully:", data);
 
-    // Ensure data format is as expected
+    
     if (!Array.isArray(data)) {
       throw new Error("Fetched data is not an array.");
     }
 
-    // Clear existing data in the database
+ 
     await Transaction.deleteMany({});
 
-    // Insert new data into the database
+  
     await Transaction.insertMany(data);
 
     console.log("Database initialized successfully.");
@@ -43,31 +28,6 @@ const initializeDatabase = async (req, res) => {
     res.status(500).send({ message: "Failed to initialize database", error });
   }
 };
-
-// const listTransactions = async (req, res) => {
-//   const { month, page = 1, perPage = 10, search = "" } = req.query;
-//   const start = new Date(`${month} 1, 2021`);
-//   const end = new Date(`${month} 1, 2021`);
-//   end.setMonth(end.getMonth() + 1);
-
-//   const query = {
-//     dateOfSale: { $gte: start, $lt: end },
-//     $or: [
-//       { productName: { $regex: search, $options: "i" } },
-//       { description: { $regex: search, $options: "i" } },
-//       { price: { $regex: search, $options: "i" } },
-//     ],
-//   };
-
-//   try {
-//     const transactions = await Transaction.find(query)
-//       .skip((page - 1) * perPage)
-//       .limit(Number(perPage));
-//     res.status(200).json(transactions);
-//   } catch (error) {
-//     res.status(500).send({ message: "Failed to fetch transactions", error });
-//   }
-// };
 
 const listTransactions = async (req, res) => {
   const { month, page = 1, perPage = 10, search = "" } = req.query;
